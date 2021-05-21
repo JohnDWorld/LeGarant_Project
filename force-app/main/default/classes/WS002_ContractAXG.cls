@@ -8,11 +8,11 @@
 global with sharing class WS002_ContractAXG {
     //Method to create contract from AXG
     @httpPost
-    global static Id createContractFromAXG(String account, String status, Integer term) {
+    global static Id createContractFromAXG(String account, String status, Integer contractTerm) {
         Contract thisContract = new Contract(
             AccountId = account,
             Status = status,
-            ContractTerm = term
+            ContractTerm = contractTerm
         );
         insert thisContract;
         return thisContract.Id;

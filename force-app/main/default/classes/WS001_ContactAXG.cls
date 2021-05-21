@@ -17,7 +17,8 @@ global with sharing class WS001_ContactAXG {
                 LastName = lastName,
                 FirstName = firstName,
                 Email = email,
-                Phone = phone
+                Phone = phone,
+                Email_Heroku__c = email
             );
             insert thisContact;
             return thisContact.Id;
@@ -35,6 +36,9 @@ global with sharing class WS001_ContactAXG {
         for(String fieldName : params.keySet()) {
             // Set the field and value on the Case sObject
             thisContact.put(fieldName, params.get(fieldName));
+            if(fieldName == 'Email') {
+                thisContact.put('Email_Heroku__c', params.get(fieldName));
+            }
         }
         update thisContact;
         return thisContact;

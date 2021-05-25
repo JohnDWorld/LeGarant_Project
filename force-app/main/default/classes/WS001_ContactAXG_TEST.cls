@@ -28,8 +28,9 @@ private class WS001_ContactAXG_TEST {
         System.assert(thisContactId1 != null);
         System.assert(thisContactId2 != null);
         System.assert(thisContactId1 == thisContactId2);
-        List<Contact> thisContacts = [SELECT Id, Email FROM Contact WHERE Email='exemple@exemple.com'];
+        List<Contact> thisContacts = [SELECT Id, Email, Email_Heroku__c FROM Contact WHERE Email='exemple@exemple.com'];
         System.assert(thisContacts != null);
+        System.assertEquals('exemple@exemple.com', thisContacts[0].Email_Heroku__c);
         System.assertEquals(1, thisContacts.size());
     }
     //Test to update contact with info from AXG
@@ -41,16 +42,17 @@ private class WS001_ContactAXG_TEST {
         request.requestURI = 'https://mindful-koala-iv2st7-dev-ed.my.salesforce.com/services/apexrest/Cases/'+thisContactId;
         request.httpMethod = 'PATCH';
         request.addHeader('Content-Type', 'application/json');
-        request.requestBody = Blob.valueOf('{"lastName": "Update"}');
+        request.requestBody = Blob.valueOf('{"email": "email.update@exemple.com"}');
         RestContext.request = request;
         //Update contact of existing contact
         Contact contactUpdate = WS001_ContactAXG.updateContactFromAXG();
 
         //Verify contact was update
         System.assert(contactUpdate != null);
-        Contact thisContact = [SELECT LastName FROM Contact WHERE Id=:thisContactId];
+        Contact thisContact = [SELECT Email, Email_Heroku__c FROM Contact WHERE Id=:thisContactId];
         System.assert(thisContact != null);
-        System.assertEquals('Update', thisContact.LastName);
+        System.assertEquals('email.update@exemple.com', thisContact.Email);
+        System.assertEquals('email.update@exemple.com', thisContact.Email_Heroku__c);
     }
     //Test to unactive contact after delete from AXG
     @isTest static void testDisableContact() {
